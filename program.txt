@@ -1,0 +1,7 @@
+begin
+A := 14 + 7;
+B := 4 + A;
+write (A);
+-- XDDDD
+end
+SCANEOF
