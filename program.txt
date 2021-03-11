@@ -1,6 +1,7 @@
 begin
 A := 14 + 7;
 B := 4 + A;
+C := 1 | B | C;
 write (A);
 -- XDDDD
 end

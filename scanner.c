@@ -57,7 +57,6 @@ token scanner(void){
                 buffer_char(c);
             }
             ungetc(c, file);
-            ungetc(c)
             return check_reserved();
         } else if(isdigit(in_char)){
             buffer_char(in_char);
@@ -81,7 +80,10 @@ token scanner(void){
         } else if(in_char == '+'){
             printf("PLUSOP\n");
             return PLUSOP;
-        } else if(in_char == 58){
+        } else if(in_char == '|'){
+            printf("CONDITIONALOP\n");
+            return CONDITIONALOP;
+        }else if(in_char == ':'){
             c = getc(file);
             if (c == '='){
                 printf("ASSIGNOP\n");

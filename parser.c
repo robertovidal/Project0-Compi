@@ -97,9 +97,17 @@ void id_list(void){
 void expression(void){
     token t;
     primary();
-    for(t = next_token(); t == PLUSOP || t == MINUSOP; t = next_token()){
-        add_op();
-        primary();
+    for(t = next_token(); t == PLUSOP || t == MINUSOP || t == CONDITIONALOP; t = next_token()){
+        if(t == CONDITIONALOP){
+            match(CONDITIONALOP);
+            primary();
+            match(CONDITIONALOP);
+            primary();
+        }
+        else{
+            add_op();
+            primary();
+        }
     }
 }
 
@@ -112,6 +120,14 @@ void expr_list(void){
 }
 
 void add_op(void){
+    token tok = next_token();
+    if(tok == PLUSOP || tok == MINUSOP)
+        match(tok);
+    else
+        error();
+}
+
+void cond_op(void){
     token tok = next_token();
     if(tok == PLUSOP || tok == MINUSOP)
         match(tok);
