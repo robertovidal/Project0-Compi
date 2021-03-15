@@ -10,11 +10,11 @@ FILE *file;
 
 token scanner(void);
 
-void system_goal(void);
-
 extern char token_buffer[];
 
 token token_list[100];
+
+char *fileNameR;
 
 
 #endif // GLOBAL_H_

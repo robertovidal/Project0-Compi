@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "global.h"
+#include "scanner.h"
 
 char token_buffer[100] = "";
 

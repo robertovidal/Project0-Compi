@@ -2,11 +2,8 @@
 #include <ctype.h>
 #include <string.h>
 #include "global.h"
+#include "parser.h"
 
-
-token current_token;
-
-token next_tok;
 
 char next_buffer[100];
 
