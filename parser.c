@@ -37,9 +37,11 @@ void system_goal(void){
     strcpy(next_buffer, token_buffer);
     program();
     match(SCANEOF);
+    finish();
 }
 
 void program(void){
+    start();
     match(BEGIN);
     statement_list();
     match(END);
@@ -62,10 +64,15 @@ void statement_list(void){
 
 void statement(void){
     token tok = next_token();
+    expr_rec target, source;
     switch(tok){
     case ID:
-        match(ID); match(ASSIGNOP);
-        expression(); match(SEMICOLON);
+        match(ID);
+        target = process_id();
+        match(ASSIGNOP);
+        expression(&source);
+        match(SEMICOLON);
+        assign(target, source);
         break;
     case READ:
         match(READ); match(LPAREN);
@@ -85,41 +92,54 @@ void statement(void){
 
 void id_list(void){
     match(ID);
+    expr_rec id = process_id();
+    read_id(id);
     while(next_token() == COMMA){
         match(COMMA);
         match(ID);
+        expr_rec id = process_id();
+        read_id(id);
     }
 }
 
-void expression(void){
+void expression(expr_rec *result) {
     token t;
-    primary();
+    expr_rec left_operand, center_operand, right_operand;
+    op_rec op;
+    primary(& left_operand);
     for(t = next_token(); t == PLUSOP || t == MINUSOP || t == CONDITIONALOP; t = next_token()){
         if(t == CONDITIONALOP){
             match(CONDITIONALOP);
-            primary();
+            primary(& center_operand);
             match(CONDITIONALOP);
-            primary();
+            primary(& right_operand);
         }
         else{
-            add_op();
-            primary();
+            add_op(& op);
+            primary(& right_operand);
+            left_operand = gen_infix(left_operand, op, right_operand);
         }
     }
+    *result = left_operand;
 }
 
 void expr_list(void){
-    expression();
+    expr_rec expr;
+    expression(&expr);
+    write_expr(expr);
     while(next_token() == COMMA){
         match(COMMA);
-        expression();
+        expression(&expr);
+        write_expr(expr);
     }
 }
 
-void add_op(void){
+void add_op(op_rec *result){
     token tok = next_token();
-    if(tok == PLUSOP || tok == MINUSOP)
+    if(tok == PLUSOP || tok == MINUSOP){
         match(tok);
+        *result = process_op();
+    }
     else
         error();
 }
@@ -132,18 +152,22 @@ void cond_op(void){
         error();
 }
 
-void primary(void){
+void primary(expr_rec *result){
     token tok = next_token();
+    expr_rec res;
     switch(tok){
     case LPAREN:
-        match(LPAREN); expression();
+        match(LPAREN); expression(&res);
         match(RPAREN);
+        *result = res;
         break;
     case ID:
         match(ID);
+        *result = process_id();
         break;
     case INTLITERAL:
         match(INTLITERAL);
+        *result = process_literal();
         break;
     default:
         error();
