@@ -2,7 +2,7 @@ token next_token(void);
 
 void error(void);
 
-void match(token tok, times again);
+void match(token tok);
 
 void system_goal(void);
 

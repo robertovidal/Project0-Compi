@@ -15,13 +15,13 @@ token next_token(void){
 }
 
 void error(void){
-    printf("There was an error \n");
+    printf("There was an error in line: %i, Column: %i \n", line, col);
 }
 
-void match(token tok, times again){
+void match(token tok){
     current_token = next_tok;
     if(current_token != SCANEOF){
-        next_tok = scanner(again);
+        next_tok = scanner();
         strcpy(current_buffer, next_buffer);
         strcpy(next_buffer, token_buffer);
         strcpy(token_buffer, current_buffer);
@@ -35,18 +35,20 @@ void match(token tok, times again){
 }
 
 void system_goal(void){
-    next_tok = scanner(FIRST);
+    col = 0;
+    line = 0;
+    next_tok = scanner();
     strcpy(next_buffer, token_buffer);
     program();
-    match(SCANEOF,FIRST);
+    match(SCANEOF);
     finish();
 }
 
 void program(void){
     start();
-    match(BEGIN,FIRST);
+    match(BEGIN);
     statement_list();
-    match(END,FIRST);
+    match(END);
 }
 
 void statement_list(void){
@@ -69,22 +71,22 @@ void statement(void){
     expr_rec target, source;
     switch(tok){
     case ID:
-        match(ID,FIRST);
+        match(ID);
         target = process_id();
-        match(ASSIGNOP,FIRST);
+        match(ASSIGNOP);
         expression(&source, false);
-        match(SEMICOLON,FIRST);
+        match(SEMICOLON);
         assign(target, source);
         break;
     case READ:
-        match(READ,FIRST); match(LPAREN,FIRST);
-        id_list(); match(RPAREN,FIRST);
-        match(SEMICOLON,FIRST);
+        match(READ); match(LPAREN);
+        id_list(); match(RPAREN);
+        match(SEMICOLON);
         break;
     case WRITE:
-        match(WRITE,FIRST); match(LPAREN,FIRST);
-        expr_list(); match(RPAREN,FIRST);
-        match(SEMICOLON,FIRST);
+        match(WRITE); match(LPAREN);
+        expr_list(); match(RPAREN);
+        match(SEMICOLON);
         break;
     default:
         printf("statement token not found (%i)", tok);
@@ -94,12 +96,12 @@ void statement(void){
 }
 
 void id_list(void){
-    match(ID,FIRST);
+    match(ID);
     expr_rec id = process_id();
     read_id(id);
     while(next_token() == COMMA){
-        match(COMMA,FIRST);
-        match(ID,FIRST);
+        match(COMMA);
+        match(ID);
         expr_rec id = process_id();
         read_id(id);
     }
@@ -117,14 +119,11 @@ void expression(expr_rec *result, bool skip) {
         if(t == CONDITIONALOP){
             if(skip)
                 break;
-            match(CONDITIONALOP, SECOND);
-            //primary(& center_operand); //next_token()
-            //primary(& right_operand);
-            //left_operand = gen_conditional(left_operand, center_operand, right_operand);
+            match(CONDITIONALOP);
 
             if(left_operand.kind == LITERALEXPR){
                 expression(& center_operand, true);
-                match(CONDITIONALOP,SECOND);
+                match(CONDITIONALOP);
                 if (left_operand.val){
                     expression(& right_operand, true);
                     left_operand = single_expr_save(center_operand);
@@ -139,7 +138,7 @@ void expression(expr_rec *result, bool skip) {
                 expression(& center_operand, true);
                 string f_end = "";
                 strcpy(f_end, gen_conditional_phase2(f_e3));
-                match(CONDITIONALOP,SECOND);
+                match(CONDITIONALOP);
                 expression(& right_operand, true);
                 left_operand = gen_conditional_phase3(center_operand, right_operand, f_end);
             }
@@ -160,7 +159,7 @@ void expr_list(void){
     expression(&expr, false);
     write_expr(expr);
     while(next_token() == COMMA){
-        match(COMMA,FIRST);
+        match(COMMA);
         expression(&expr, false);
         write_expr(expr);
     }
@@ -169,7 +168,7 @@ void expr_list(void){
 void add_op(op_rec *result){
     token tok = next_token();
     if(tok == PLUSOP || tok == MINUSOP){
-        match(tok,FIRST);
+        match(tok);
         *result = process_op();
     }
     else
@@ -181,16 +180,16 @@ void primary(expr_rec *result){
     expr_rec res;
     switch(tok){
     case LPAREN:
-        match(LPAREN,FIRST); expression(&res, false);
-        match(RPAREN,FIRST);
+        match(LPAREN); expression(&res, false);
+        match(RPAREN);
         *result = res;
         break;
     case ID:
-        match(ID,FIRST);
+        match(ID);
         *result = process_id();
         break;
     case INTLITERAL:
-        match(INTLITERAL,FIRST);
+        match(INTLITERAL);
         *result = process_literal();
         break;
     default:

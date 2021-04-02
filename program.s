@@ -34,46 +34,9 @@ main:
 	str r5, [r6]
 	b FUNC1
 	FUNC0:
-	ldr r7, A_add
-	ldr r8, [r7]
-	mov r9, #1
-	sub r9, r9, r8
-	ldr r10, TEMP
-	str r9, [r10]
-	mov r5, r9
 	FUNC1:
 	ldr r7, C_add
 	str r5, [r7]
-	ldr r8, C_add
-	ldr r9, [r8]
-	ldr r10, TEMP
-	str r9, [r10]
-	ldr r2, C_add
-	ldr r1, [r2]
-	ldr r0, string1
-	bl printf
-	ldr r0, string2
-	ldr r1, C_add
-	bl scanf
-	ldr r0, string2
-	ldr r1, A_add
-	bl scanf
-	ldr r11, C_add
-	ldr r12, [r11]
-	ldr r1, TEMP
-	str r12, [r1]
-	ldr r2, C_add
-	ldr r1, [r2]
-	ldr r0, string1
-	bl printf
-	ldr r2, A_add
-	ldr r3, [r2]
-	ldr r4, TEMP
-	str r3, [r4]
-	ldr r2, A_add
-	ldr r1, [r2]
-	ldr r0, string1
-	bl printf
 	pop {ip, pc}
 
 A_add: .word A_var

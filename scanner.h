@@ -6,6 +6,6 @@ token check_reserved(void);
 
 void lexical_error(char c);
 
-token scanner(times again);
+token scanner();
 
 void return_chars(int count);

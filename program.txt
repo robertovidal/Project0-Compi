@@ -1,7 +1,7 @@
 begin
 A := 14;
 
-C := A-12-2 | A + 2 | 1-A;
+C := A-12-2 | A + 2;
 write(C);
 
 read(C,A);

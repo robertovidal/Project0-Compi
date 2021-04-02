@@ -17,8 +17,6 @@ typedef struct operator {
 
 enum expr { IDEXPR, LITERALEXPR, TEMPEXPR, NONE };
 
-typedef enum { FIRST, SECOND } times;
-
 typedef struct expression {
     enum expr kind;
     union {
@@ -29,12 +27,15 @@ typedef struct expression {
 
 FILE *file;
 
-token scanner(times again);
+token scanner();
 
 extern char token_buffer[];
 
 char *fileNameR;
 
 int in_conditional;
+
+int col;
+int line;
 
 #endif // GLOBAL_H_
