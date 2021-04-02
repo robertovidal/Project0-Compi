@@ -5,6 +5,8 @@
 #include "scanner.h"
 
 char token_buffer[100] = "";
+int col = 0;
+int line = 0;
 
 void clear_buffer(void){
     strcpy(token_buffer, "");
@@ -41,15 +43,20 @@ token check_reserved(void){
 }
 
 void lexical_error(char c){
-    printf("There was an error with the char %c", c);
+    printf("There was an error with the char %c. Line: %i, Column: %i", c, line, col);
 }
 
-token scanner(void){
+token scanner(times again){
     int in_char, c;
     clear_buffer();
     if (feof(file))
         return SCANEOF;
     while ((in_char = getc(file)) != EOF){
+        col++;
+        if(in_char == '\n'){
+            line++;
+            col = 0;
+        }
         if(isspace(in_char))
             continue;
         else if (isalpha(in_char)){
@@ -82,8 +89,51 @@ token scanner(void){
             printf("PLUSOP\n");
             return PLUSOP;
         } else if(in_char == '|'){
-            printf("CONDITIONALOP\n");
+            printf("line: %i, col: %i \n", line, col);
+            printf("AGAIN: %d \n",again);
+            printf("CHAR: %d \n",in_char);
+            // int count = 0;
+            // int count_all = 0;
+            // if(again == FIRST){
+            //     for(c = getc(file); c != '|'; c = getc(file)){
+            //         count_all++;
+            //         buffer_char(c);
+            //         if(isspace(in_char))
+            //             continue;
+            //         if(c == ';'){
+            //             printf("PUNTO Y COMA");
+            //             return_chars(count);
+            //             lexical_error(in_char);
+            //             return ERROR;
+            //         }
+            //         count++;
+            //     }
+            // } else if(again == SECOND){
+            //     for(c = getc(file); c != ';'; c = getc(file)){
+            //         count_all++;
+            //         buffer_char(c);
+            //         if(isspace(in_char))
+            //             continue;
+            //         count++;
+            //     }
+            // }
+            // // go back since we still need to check them
+            // return_chars(count_all);
+            // if(again == FIRST)
+            //     ungetc('|', file); // need it for the second revision
+            // clear_buffer();
+            // if(count > 0){
+            //     printf("CONDITIONALOP\n");
+            //     return CONDITIONALOP;
+            // } else {
+            //     lexical_error(in_char);
+            //     return ERROR;
+            // }
+
+
+            printf("CONDITIONALOP \n");
             return CONDITIONALOP;
+
         }else if(in_char == ':'){
             c = getc(file);
             if (c == '='){
@@ -93,6 +143,7 @@ token scanner(void){
             else {
                 ungetc(c, file);
                 lexical_error(in_char);
+                return ERROR;
             }
         } else if(in_char == '-'){
             c = getc(file);
@@ -105,7 +156,15 @@ token scanner(void){
                 printf("MINUSOP\n");
                 return MINUSOP;
             }
-        } else
+        } else{
             lexical_error(in_char);
+            return ERROR;
+        }
+    }
+}
+
+void return_chars(int count){
+    for(int i = 0; i < count; i++){
+        ungetc(token_buffer[i], file);
     }
 }

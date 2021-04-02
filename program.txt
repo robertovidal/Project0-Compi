@@ -1,7 +1,11 @@
 begin
-A := 14 + 7;
-B := 4 + A;
-C := 4 -B + A + 8;
+A := 14;
+
+C := A-12-2 | A + 2 | 1-A;
+write(C);
+
+read(C,A);
+write(C,A);
 -- XDDDD
 end
 SCANEOF

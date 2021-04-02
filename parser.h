@@ -2,7 +2,7 @@ token next_token(void);
 
 void error(void);
 
-void match(token tok);
+void match(token tok, times again);
 
 void system_goal(void);
 
@@ -14,7 +14,7 @@ void statement(void);
 
 void id_list(void);
 
-void expression(expr_rec *result);
+void expression(expr_rec *result, bool skip);
 
 void expr_list(void);
 

@@ -31,6 +31,24 @@ op_rec process_op(void);
 
 expr_rec gen_infix(expr_rec e1, op_rec op, expr_rec e2);
 
+expr_rec single_expr_save(expr_rec e);
+
+expr_rec save_temp(string last_reg);
+
+char * gen_conditional_phase1(expr_rec e1);
+
+void single_expr(expr_rec e);
+
+char * gen_conditional_phase2(string f_e3);
+
+expr_rec gen_conditional_phase3(expr_rec e2, expr_rec e3, string f_e3);
+
+expr_rec gen_conditional(expr_rec e1, expr_rec e2, expr_rec e3);
+
+void assemblyLiteralExp(int val, string register_temp);
+
+void assemblyTempExp(string name, string postFix);
+
 void read_id(expr_rec in_var);
 
 expr_rec process_id(void);
