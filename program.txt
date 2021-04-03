@@ -1,11 +1,45 @@
 begin
-A := 14;
+A := 0;
+b:=1;
 
-C := A-12-2 | A + 2;
+C := b | A | 5 - b ;
+write(C);
+C := b | A | 5 ;
+write(C);
+C := b | A | b-5 ;
+write(C);
+C := b | A | b ;
 write(C);
 
-read(C,A);
-write(C,A);
+C := b | 2+A | 5 - b ;
+write(C);
+C := b | 2+A | 5 ;
+write(C);
+C := b |2+A| b-5 ;
+write(C);
+C := b | 2+A| b ;
+write(C);
+
+C := b |A+2 | 5 - b ;
+write(C);
+C := b | A   +  2 | 5 ;
+write(C);
+C := b |A  +2 | b-5 ;
+write(C);
+C := b | A+  2 | b ;
+write(C);
+
+C := b |2 | 5 - b ;
+write(C);
+C := b |2 | 5 ;
+write(C);
+C := b |2 | b-5 ;
+write(C);
+C := b | 2| b ;
+write(C);
+
+--read(C,A);
+--write(C,A);
 -- XDDDD
 end
 SCANEOF

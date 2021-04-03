@@ -74,7 +74,7 @@ void statement(void){
         match(ID);
         target = process_id();
         match(ASSIGNOP);
-        expression(&source, false);
+        expression(&source, NOSKIP);
         match(SEMICOLON);
         assign(target, source);
         break;
@@ -107,7 +107,8 @@ void id_list(void){
     }
 }
 
-void expression(expr_rec *result, bool skip) {
+
+void expression(expr_rec *result, skip skip) {
     token t;
     expr_rec left_operand, center_operand, right_operand;
     right_operand.kind = NONE;
@@ -117,38 +118,41 @@ void expression(expr_rec *result, bool skip) {
     primary(& left_operand);
     for(t = next_token(); t == PLUSOP || t == MINUSOP || t == CONDITIONALOP; t = next_token()){
         if(t == CONDITIONALOP){
-            if(skip)
+            if(skip == CONDITIONAL || skip == CONDITIONAL_SAVE)
                 break;
             match(CONDITIONALOP);
 
             if(left_operand.kind == LITERALEXPR){
-                expression(& center_operand, true);
-                match(CONDITIONALOP);
                 if (left_operand.val){
-                    expression(& right_operand, true);
-                    left_operand = single_expr_save(center_operand);
+                    expression(& center_operand, CONDITIONAL);
+                    match(CONDITIONALOP);
+                    expression(& right_operand, CONDITIONAL_SAVE);
+                    left_operand = center_operand;
                 } else {
-                    expression(& right_operand, false);
-                    left_operand = single_expr_save(right_operand);
+                    expression(& center_operand, CONDITIONAL_SAVE);
+                    match(CONDITIONALOP);
+                    expression(& right_operand, NOSKIP);
+                    left_operand = right_operand;
                 }
                 break;
             } else {
                 string f_e3 = "";
                 strcpy(f_e3, gen_conditional_phase1(left_operand));
-                expression(& center_operand, true);
+                expression(& center_operand, CONDITIONAL);
                 string f_end = "";
                 strcpy(f_end, gen_conditional_phase2(f_e3));
                 match(CONDITIONALOP);
-                expression(& right_operand, true);
+                expression(& right_operand, NOSKIP);
                 left_operand = gen_conditional_phase3(center_operand, right_operand, f_end);
             }
         } else if(t == PLUSOP || t == MINUSOP){
             add_op(& op);
             primary(& right_operand);
-            left_operand = gen_infix(left_operand, op, right_operand);
+            if(skip != CONDITIONAL_SAVE)
+                left_operand = gen_infix(left_operand, op, right_operand);
         }
     }
-    if(right_operand.kind == NONE && center_operand.kind == NONE && left_operand.kind != NONE && !skip){
+    if(right_operand.kind == NONE && center_operand.kind == NONE && left_operand.kind != NONE && skip != CONDITIONAL_SAVE){
         single_expr_save(left_operand);
     }
     *result = left_operand;
@@ -156,11 +160,11 @@ void expression(expr_rec *result, bool skip) {
 
 void expr_list(void){
     expr_rec expr;
-    expression(&expr, false);
+    expression(&expr, NOSKIP);
     write_expr(expr);
     while(next_token() == COMMA){
         match(COMMA);
-        expression(&expr, false);
+        expression(&expr, NOSKIP);
         write_expr(expr);
     }
 }
@@ -180,7 +184,7 @@ void primary(expr_rec *result){
     expr_rec res;
     switch(tok){
     case LPAREN:
-        match(LPAREN); expression(&res, false);
+        match(LPAREN); expression(&res, NOSKIP);
         match(RPAREN);
         *result = res;
         break;

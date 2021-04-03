@@ -95,7 +95,7 @@ int actual_register = 0;
 char *get_register(void) {
     static char registername[MAXIDLEN];
     strcpy(registername, "");
-    if(actual_register == 12)
+    if(actual_register >= 12)
         actual_register = 0;
     actual_register++;
     sprintf(registername, "r%d", actual_register);
@@ -164,7 +164,7 @@ void declare_variables(void){
     }
     fputs("\n\nTEMP1: .word 0", fileA);
     fputs("\n\nstring_1: .asciz \"%i\\n\"", fileA);
-    fputs("\n\nstring_2: .asciz \"%i\"", fileA);
+    fputs("\n\nstring_2: .asciz \"%i\" \n", fileA);
     fclose(fileA);
 }
 
@@ -315,7 +315,10 @@ void single_expr(expr_rec e){
 
 int last_reg_with_val;
 char * gen_conditional_phase2(string f_e3){
-    last_reg_with_val = actual_register - 1;
+    if(actual_register == 1)
+        last_reg_with_val = 12;
+    else
+        last_reg_with_val = actual_register - 1;
     static char f_end[MAXIDLEN];
     string jump_end = "";
     strcpy(f_end, get_function());

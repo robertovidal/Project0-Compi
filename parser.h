@@ -14,7 +14,9 @@ void statement(void);
 
 void id_list(void);
 
-void expression(expr_rec *result, bool skip);
+typedef enum { CONDITIONAL, CONDITIONAL_SAVE, NOSKIP } skip;
+
+void expression(expr_rec *result, skip skip);
 
 void expr_list(void);
 
