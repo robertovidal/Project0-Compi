@@ -1,6 +1,6 @@
 begin
 A := 0;
-b:=1;
+read(b);
 
 C := b | A | 5 - b ;
 write(C);
