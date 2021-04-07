@@ -38,8 +38,5 @@ write(C);
 C := b | 2| b ;
 write(C);
 
---read(C,A);
---write(C,A);
--- XDDDD
 end
 SCANEOF

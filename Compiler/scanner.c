@@ -18,23 +18,17 @@ void buffer_char(char c){
 
 token check_reserved(void){
     if(strcmp(token_buffer,"begin") == 0){
-        printf("BEGIN\n");
         return BEGIN;
     } else if (strcmp(token_buffer,"end") == 0){
-        printf("END\n");
         return END;
     } else if (strcmp(token_buffer,"read") == 0){
-        printf("READ\n");
         return READ;
     } else if (strcmp(token_buffer,"write") == 0){
-        printf("WRITE\n");
         return WRITE;
     } else if (strcmp(token_buffer,"SCANEOF") == 0){
-        printf("SCANEOF\n");
         return SCANEOF;
     }
     else{
-        printf("ID\n");
         return ID;
     }
 
@@ -69,30 +63,22 @@ token scanner(){
             for(c = getc(file); isdigit(c); c = getc(file))
                 buffer_char(c);
             ungetc(c, file);
-            printf("INTLITERAL\n");
             return INTLITERAL;
         } else if(in_char == '('){
-            printf("LPAREN\n");
             return LPAREN;
         } else if(in_char == ')'){
-            printf("RPAREN\n");
             return RPAREN;
         } else if(in_char == ';'){
-            printf("SEMICOLON\n");
             return SEMICOLON;
         } else if(in_char == ','){
-            printf("COMMA\n");
             return COMMA;
         } else if(in_char == '+'){
-            printf("PLUSOP\n");
             return PLUSOP;
         } else if(in_char == '|'){
-            printf("CONDITIONALOP \n");
             return CONDITIONALOP;
         }else if(in_char == ':'){
             c = getc(file);
             if (c == '='){
-                printf("ASSIGNOP\n");
                 return ASSIGNOP;
             }
             else {
@@ -108,7 +94,6 @@ token scanner(){
                 while(in_char != '\n');
             } else {
                 ungetc(c, file);
-                printf("MINUSOP\n");
                 return MINUSOP;
             }
         } else{

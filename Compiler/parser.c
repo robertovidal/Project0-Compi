@@ -30,8 +30,6 @@ void match(token tok){
         printf("Current token (%i) different than token asked (%i) \n", current_token, tok);
         error();
     }
-    else
-        printf("nice (%i) with (%i)\n", current_token, tok);
 }
 
 void system_goal(void){

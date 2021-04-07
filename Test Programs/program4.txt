@@ -1,0 +1,20 @@
+begin
+read(A,B);
+C := A + B;
+D := B + A;
+E := A - B;
+F := B - A;
+-- C y D deberian ser iguales
+-- E y F deberian ser iguales pero uno positivo y el otro negativo
+write(C,D,E,F);
+D := 30 | C + D | E - F;
+-- D deberia ser C + D
+write(D);
+read(A, B);
+C := A + B - A - B + A;
+-- C deberia ser igual a A
+write(C);
+F := A + B - C - D + E - F;
+write(F);
+end
+SCANEOF

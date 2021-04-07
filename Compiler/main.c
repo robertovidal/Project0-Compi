@@ -26,6 +26,7 @@ int main() {
     }
     resultFileName(fileName);
     system_goal();
+    printf("File compiled successfully in the file: %s \n", fileNameR);
     fclose(file);
     return 0;
 }
