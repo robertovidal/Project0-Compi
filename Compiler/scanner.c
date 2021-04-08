@@ -35,7 +35,8 @@ token check_reserved(void){
 }
 
 void lexical_error(char c){
-    printf("There was an error with the char %c. Line: %i, Column: %i", c, line, col);
+    compiled = false;
+    printf("There was an error with the char %c. Line: %i, Column: %i \n", c, line, col);
 }
 
 token scanner(){
@@ -43,27 +44,18 @@ token scanner(){
     clear_buffer();
     if (feof(file))
         return SCANEOF;
-    while ((in_char = getc(file)) != EOF){
-        col++;
-        if(in_char == '\n'){
-            line++;
-            col = 0;
-        }
+    while ((in_char = getChar()) != EOF){
         if(isspace(in_char))
             continue;
         else if (isalpha(in_char)){
             buffer_char(in_char);
-            for(c = getc(file); isalnum(c) || c == '_'; c = getc(file)){
+            for(c = getChar(); isalnum(c) || c == '_'; c = getChar()){
                 buffer_char(c);
             }
             ungetc(c, file);
             return check_reserved();
         } else if(isdigit(in_char)){
-            buffer_char(in_char);
-            for(c = getc(file); isdigit(c); c = getc(file))
-                buffer_char(c);
-            ungetc(c, file);
-            return INTLITERAL;
+            return storeLiteral(in_char);
         } else if(in_char == '('){
             return LPAREN;
         } else if(in_char == ')'){
@@ -77,7 +69,7 @@ token scanner(){
         } else if(in_char == '|'){
             return CONDITIONALOP;
         }else if(in_char == ':'){
-            c = getc(file);
+            c = getChar();
             if (c == '='){
                 return ASSIGNOP;
             }
@@ -87,14 +79,32 @@ token scanner(){
                 return ERROR;
             }
         } else if(in_char == '-'){
-            c = getc(file);
+            c = getChar();
             if(c == '-'){
                 do
-                    in_char = getc(file);
+                    in_char = getChar();
                 while(in_char != '\n');
+                line++;
+                col = 1;
             } else {
-                ungetc(c, file);
-                return MINUSOP;
+                if(current_token != ASSIGNOP && current_token != PLUSOP && 
+                current_token != LPAREN && current_token != CONDITIONALOP){
+                    ungetc(c, file);
+                    return MINUSOP;
+                } else {
+                    buffer_char(in_char);
+                    do{
+                        if(isspace(c)){
+                            continue;
+                        }else if(isdigit(c)){
+                            return storeLiteral(c);
+                        } else {
+                            lexical_error(in_char);
+                            return ERROR;
+                        }
+                        c = getChar();
+                    }while(c != '\n');
+                }
             }
         } else{
             lexical_error(in_char);
@@ -103,8 +113,25 @@ token scanner(){
     }
 }
 
-void return_chars(int count){
-    for(int i = 0; i < count; i++){
-        ungetc(token_buffer[i], file);
+token storeLiteral(char c){
+    int count = 0;
+    buffer_char(c);
+    for(c = getChar(); isdigit(c); c = getChar()){
+        count++;
+        buffer_char(c);
     }
+    ungetc(c, file);
+    if(count >= 32)
+        return ERROR;
+    return INTLITERAL;
+}
+
+char getChar(){
+    char c = getc(file);
+    col++;
+    if(c == '\n'){
+        line++;
+        col = 1;
+    }
+    return c;
 }

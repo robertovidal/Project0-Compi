@@ -1,2 +1,0 @@
-program: program.s
-	as program.s -o program.o && gcc program.o -o program -g

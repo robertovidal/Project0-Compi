@@ -1,42 +1,13 @@
 begin
-A := 0;
-read(b);
-
-C := b | A | 5 - b ;
-write(C);
-C := b | A | 5 ;
-write(C);
-C := b | A | b-5 ;
-write(C);
-C := b | A | b ;
-write(C);
-
-C := b | 2+A | 5 - b ;
-write(C);
-C := b | 2+A | 5 ;
-write(C);
-C := b |2+A| b-5 ;
-write(C);
-C := b | 2+A| b ;
-write(C);
-
-C := b |A+2 | 5 - b ;
-write(C);
-C := b | A   +  2 | 5 ;
-write(C);
-C := b |A  +2 | b-5 ;
-write(C);
-C := b | A+  2 | b ;
-write(C);
-
-C := b |2 | 5 - b ;
-write(C);
-C := b |2 | 5 ;
-write(C);
-C := b |2 | b-5 ;
-write(C);
-C := b | 2| b ;
-write(C);
-
+B:=2;
+A:=0|-5|-3+B;
+write(A);
+-- should print -1
+A:=A|-3-10|B;
+write(A);
+-- should print -13
+A:=A|-3-B|B;
+write(A);
+-- should print -5
 end
 SCANEOF

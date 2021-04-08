@@ -37,5 +37,8 @@ int in_conditional;
 
 int col;
 int line;
+bool compiled;
+
+token current_token;
 
 #endif // GLOBAL_H_

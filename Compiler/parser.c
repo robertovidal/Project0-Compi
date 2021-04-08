@@ -15,6 +15,7 @@ token next_token(void){
 }
 
 void error(void){
+    compiled = false;
     printf("There was an error in line: %i, Column: %i \n", line, col);
 }
 
@@ -33,8 +34,8 @@ void match(token tok){
 }
 
 void system_goal(void){
-    col = 0;
-    line = 0;
+    col = 1;
+    line = 1;
     next_tok = scanner();
     strcpy(next_buffer, token_buffer);
     program();
@@ -87,7 +88,7 @@ void statement(void){
         match(SEMICOLON);
         break;
     default:
-        printf("statement token not found (%i)", tok);
+        printf("statement token not found (%i) \n", tok);
         error();
         break;
     }
@@ -195,7 +196,7 @@ void primary(expr_rec *result){
         *result = process_literal();
         break;
     default:
-    printf("primary token not found (%i)", tok);
+    printf("primary token not found (%i) \n", tok);
         error();
         break;
     }

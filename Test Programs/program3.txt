@@ -8,11 +8,11 @@ H := G | D + E | E + F;
 write(D,E,F,H);
 C := 27 + 10;
 D := C + C - C;
--- C y D deberian ser 37
+-- C and D should be 37
 write(C, D);
 A := 0 | 0 | 1;
 B := A | 1 | 0;
--- A y B deberian ser 1
+-- A and B should be 1
 write(A, B);
 end
 SCANEOF

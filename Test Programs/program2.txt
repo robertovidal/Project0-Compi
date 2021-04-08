@@ -1,7 +1,7 @@
 begin
 read(A, B);
 C := 1 | B - 7 + 3 | A + 4;
--- C deberia ser B - 7 + 3
+-- C should be B - 7 + 3
 A := 20 + C;
 write(A , B , C);
 D := A - B + C;
@@ -9,14 +9,14 @@ read(E);
 C := E | D + E | B + 2;
 write(D,C);
 A := 27 + 2 - 7 + 13;
--- A deberia ser 35
+-- A should be 35
 write(A);
 A := A + A;
--- A deberia ser 70
+-- A should be 70
 write(A);
 A := A + B + C + D;
 C := B - B | 27 + 35 | A + B + C + D;
--- C deberia ser A + B + C + D
+-- C should be A + B + C + D
 write(A, C);
 end
 SCANEOF

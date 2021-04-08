@@ -22,7 +22,7 @@ void generate(char *op_code, char *a, char *b, char *r) {
 
     fileA = fopen(fileNameR, "a");
     if(fileA == NULL) {
-        printf("No se pudo editar el archivo.\n");
+        printf("The file could not be edited.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -131,7 +131,7 @@ void start(void) {
     FILE * fileA;
     fileA = fopen(fileNameR, "w");
     if(fileA == NULL) {
-        printf("No se pudo editar el archivo.\n");
+        printf("The file could not be edited.\n");
         exit(EXIT_FAILURE);
     }
     char res[] = ".section .text\n.global main\n.extern printf\n\nmain:";
@@ -144,7 +144,7 @@ void declare_variables(void){
     FILE * fileA;
     fileA = fopen(fileNameR, "a");
     if(fileA == NULL) {
-        printf("No se pudo editar el archivo.\n");
+        printf("The file could not be edited.\n");
         exit(EXIT_FAILURE);
     }
     string address_var = "";
@@ -216,7 +216,11 @@ expr_rec gen_infix(expr_rec e1, op_rec op, expr_rec e2) {
             }
             strcpy(last_reg, get_last_register());
         } else {
-            assemblyTempExp(e2.name, postFix);
+            if(e2.kind != TEMPEXPR){
+                assemblyTempExp(e2.name, postFix);
+            } else {
+                assemblyTempExp(e2.name, "");
+            }
             strcpy(last_reg, get_last_register());
             string register_value = "";
             strcpy(register_value, get_register());
@@ -229,17 +233,20 @@ expr_rec gen_infix(expr_rec e1, op_rec op, expr_rec e2) {
     } else {
         if(e1.kind != TEMPEXPR){
             assemblyTempExp(e1.name, postFix);
-            strcpy(last_reg, get_last_register());
         } else {
             assemblyTempExp(e_rec.name, "");
-            strcpy(last_reg, get_last_register());
         }
+        strcpy(last_reg, get_last_register());
 
         if(e2.kind == LITERALEXPR){
             assemblyLiteralExp(e2.val, get_register());
             generate(extract_op(op), get_last_register(), last_reg, get_last_register());
         } else {
-            assemblyTempExp(e2.name, postFix);
+            if(e2.kind != TEMPEXPR){
+                assemblyTempExp(e2.name, postFix);
+            } else {
+                assemblyTempExp(e2.name, "");
+            }
             generate(extract_op(op), get_last_register(), last_reg, get_last_register());
         }
         strcpy(last_reg, get_last_register());

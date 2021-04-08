@@ -24,8 +24,6 @@ void add_op(op_rec *result);
 
 void primary(expr_rec *result);
 
-token current_token;
-
 token next_tok;
 
 void start(void);

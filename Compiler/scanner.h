@@ -8,4 +8,6 @@ void lexical_error(char c);
 
 token scanner();
 
-void return_chars(int count);
+token storeLiteral(char c);
+
+char getChar();
